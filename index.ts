@@ -281,17 +281,17 @@ export function geojson2osm(geojson: GeoJSON.Feature<any> | GeoJSON.FeatureColle
         obj.push(togeojson(geojson.features[i].geometry, geojson.features[i].properties))
       }
       for (let n = 0; n < obj.length; n++) {
-        if (obj[n].nodes !== 'undefined') {
+        if (obj[n].nodes !== undefined) {
           temp.nodes += obj[n].nodes
         }
-        if (obj[n].ways !== 'undefined') {
+        if (obj[n].ways !== undefined) {
           temp.ways += obj[n].ways
         }
-        if (obj[n].relations !== 'undefined') {
+        if (obj[n].relations !== undefined) {
           temp.relations += obj[n].relations
         }
       }
-      temp.osm = '<?xml version="1.0" encoding="UTF-8"?><osm version="0.6" generator="https://github.com/Rub21/geojson2osm">'
+      temp.osm = '<?xml version="1.0" encoding="UTF-8"?><osm version="0.6" generator="geojson2osm">'
       temp.osm += temp.nodes + temp.ways + temp.relations
       temp.osm += '</osm>'
       osm_file = temp.osm
