@@ -36,7 +36,7 @@ function Point(geo: GeoJSON.GeometryObject, properties: Properties = {}) {
 
 /**
  * Converts GeoJSON.LineString to OSM XML
- * 
+ *
  * @param {LineString}
  * @param {Object} properties
  * @returns {string} OSM XML string
@@ -63,7 +63,7 @@ function LineString(geo: GeoJSON.GeometryObject, properties: Properties) {
 
 /**
  * Converts GeoJSON.MultiLineString to OSM XML
- * 
+ *
  * @param {MultiLineString}
  * @param {Object} properties
  * @returns {string} OSM XML string
@@ -90,7 +90,7 @@ function MultiLineString(geo: GeoJSON.GeometryObject, properties: Properties) {
 
 /**
  * Converts GeoJSON.Polygon to OSM XML
- * 
+ *
  * @param {Polygon}
  * @param {Object} properties
  * @returns {string} OSM XML string
@@ -117,7 +117,7 @@ function Polygon(geo: GeoJSON.GeometryObject, properties: Properties) {
 
 /**
  * Round coordinates
- * 
+ *
  * @param {number[][]} coords Coordinates
  * @returns {number[][]} coords Rounded coordinates
  */
@@ -158,9 +158,9 @@ function propertiesEdit(properties: Properties) {
   if (!hasId) {
     attributes += ` id="${ count }" `
   }
-  if (!hasChangeset) {
-    attributes += ' changeset="false" '
-  }
+  // if (!hasChangeset) {
+  //   attributes += ' changeset="false" '
+  // }
   return attributes
 }
 
@@ -214,7 +214,7 @@ function createNodes(coords: [number, number][], repeatLastND: boolean | number)
 }
 /**
  * GeoJSON Geometry to OSM XML string
- * 
+ *
  * @param {GeometryObject} geom
  * @param {Object} properties
  */
@@ -281,13 +281,13 @@ export function geojson2osm(geojson: GeoJSON.Feature<any> | GeoJSON.FeatureColle
         obj.push(togeojson(geojson.features[i].geometry, geojson.features[i].properties))
       }
       for (let n = 0; n < obj.length; n++) {
-        if (obj[n].nodes !== undefined) {
+        if (obj[n].nodes !== 'undefined') {
           temp.nodes += obj[n].nodes
         }
-        if (obj[n].ways !== undefined) {
+        if (obj[n].ways !== 'undefined') {
           temp.ways += obj[n].ways
         }
-        if (obj[n].relations !== undefined) {
+        if (obj[n].relations !== 'undefined') {
           temp.relations += obj[n].relations
         }
       }

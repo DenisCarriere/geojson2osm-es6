@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.92891693115234,
+          45.63996763988405
+        ]
+      },
+      "properties": {
+        "@id": 267273530,
+        "@type": "node",
+        "@version": 4,
+        "@changeset": 2476182,
+        "@uid": 154398,
+        "@user": "jon_snow",
+        "@timestamp": 1252881511,
+        "name": "Wakefield",
+        "place": "town",
+        "wikidata": "Q928044"
+      }
+    }
+  ]
+}
