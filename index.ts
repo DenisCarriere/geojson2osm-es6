@@ -14,6 +14,7 @@ interface Hash {
 }
 
 type Coordinates = [number, number][]
+const assign = Object.assign
 
 /**
  * Convert GeoJSON.Point to OSM XML
@@ -23,15 +24,12 @@ type Coordinates = [number, number][]
  * @returns {string} OSM XML String
  */
 function Point(geo: GeoJSON.GeometryObject, properties: Properties = {}) {
-  let nodes = ''
-  let coord = roundCoords([geo.coordinates])
-  nodes += `<node lat="${ coord[0][1] }" lon="${ coord[0][0] }" ${ propertiesEdit(properties)}>`
-  nodes += propertiesToTags(properties)
-  nodes += '</node>'
-  count --
-  return {
-    nodes,
+  const [lon, lat] = roundCoords([geo.coordinates])
+  const _attributes = assign({lat, lon}, propertiesEdit(properties))
+  const point = {
+    node: assign({ _attributes }, propertiesToTags(properties)),
   }
+  return point
 }
 
 /**
