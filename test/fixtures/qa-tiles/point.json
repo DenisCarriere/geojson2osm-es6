@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.380705373361707,
+          51.252104895304086
+        ]
+      },
+      "properties": {
+        "@id": 535922942,
+        "@type": "node",
+        "@version": 1,
+        "@changeset": 2897700,
+        "@uid": 45059,
+        "@user": "<don>",
+        "@timestamp": 1255987225,
+        "name": "Richlingen",
+        "place": "hamlet"
+      }
+    }
+  ]
+}
+

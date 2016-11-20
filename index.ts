@@ -26,10 +26,9 @@ const assign = Object.assign
 function Point(geo: GeoJSON.GeometryObject, properties: Properties = {}) {
   const [lon, lat] = roundCoords([geo.coordinates])
   const _attributes = assign({lat, lon}, propertiesEdit(properties))
-  const point = {
+  return {
     node: assign({ _attributes }, propertiesToTags(properties)),
   }
-  return point
 }
 
 /**
@@ -120,46 +119,48 @@ function Polygon(geo: GeoJSON.GeometryObject, properties: Properties) {
  * @returns {number[][]} coords Rounded coordinates
  */
 function roundCoords(coords: [number, number][]): [number, number][] {
-  for (let a = 0; a < coords.length; a++) {
-    coords[a][0] = Math.round(coords[a][0] * 1000000) / 1000000
-    coords[a][1] = Math.round(coords[a][1] * 1000000) / 1000000
-  }
-  return coords
+  return coords.map(coord => {
+    return coord.map(i => Number(i.toFixed(6)))
+  })
 }
 
 /**
  * Properties Edit
  *
  * @param {Object} properties
- * @returns {string} OSM XML string
+ * @returns {Element} OSM XML string
  */
 function propertiesEdit(properties: Properties) {
-  let attributes = ''
-  let hasId = false
-  let hasChangeset = false
-  for (let attrb in properties) {
-    if (attrb.indexOf('@') > -1) {
-      if (attrb === '@timestamp') {
-        let date = new Date(properties[attrb] * 1000)
-        attributes += attrb.replace('@', '') + '="' + date.toISOString() + '" '
-      } else if (attrb === '@id') {
-        attributes += attrb.replace('@', '') + '="' + properties[attrb] + '" '
-        hasId = true
-      } else if (attrb === '@changeset') {
-        attributes += attrb.replace('@', '') + '="' + properties[attrb] + '" '
-        hasChangeset = true
-      } else {
-        attributes += attrb.replace('@', '') + '="' + properties[attrb] + '" '
-      }
+  const _attributes: any = {}
+  Object.keys(properties).map(key => {
+    if (key.indexOf('@') !== -1) {
+      _attributes[key.replace('@', '')] = properties[key]
     }
+  })
+  if (_attributes.timestamp !== undefined) { _attributes.timestamp = new Date(properties[_attributes.timestamp] * 1000).toISOString() }
+  if (_attributes.id === undefined) { _attributes.id = count }
+  if (_attributes.changeset === undefined) { _attributes.changeset = 'false' }
+  return _attributes
+}
+
+/**
+ * Key XML element
+ *
+ * @param {string} key
+ * @param {string} value
+ * @example
+ * Key("foo", "bar")
+ * //=<key k="foo" v="bar" />
+ */
+function Key(key: string, value: string) {
+  return {
+    key: {
+      _attributes: {
+        k: key,
+        v: value,
+      },
+    },
   }
-  if (!hasId) {
-    attributes += ` id="${ count }" `
-  }
-  // if (!hasChangeset) {
-  //   attributes += ' changeset="false" '
-  // }
-  return attributes
 }
 
 /**
@@ -169,14 +170,11 @@ function propertiesEdit(properties: Properties) {
  * @returns {string} OSM XML string
  */
 function propertiesToTags(properties: Properties) {
-  let tags = ''
-  for (const key in properties) {
-    if (properties[key] !== null && key && key.indexOf('@') === -1) {
-      const value = properties[key].toString().replace(/"/g, '').replace(/&/g, '').replace('<', '&lt').replace('<', '&gt')
-      tags += `<tag k="${ key }" v="${ value }"/>`
-    }
-  }
-  return tags
+  return Object.keys(properties).map(key => {
+    if (properties[key] !== undefined && key.indexOf('@') === -1) {
+      return Key(key, properties[key])
+      }
+    })
 }
 
 /**
