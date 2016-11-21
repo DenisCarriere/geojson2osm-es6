@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6'>
+  <node id='-1' visible='true' lat='42.09823001449' lon='-75.67390625'>
+    <tag k='place' v='city' />
+  </node>
+</osm>

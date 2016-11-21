@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="geojson2osm-es6">
+  <node id="-1" lat="45" lon="-75" changeset="false">
+    <tag k="place" v="city"/>
+    <tag k="state" v="ON"/>
+  </node>
+</osm>

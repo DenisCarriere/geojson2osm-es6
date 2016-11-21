@@ -9,7 +9,7 @@
       "id": "way/307394550",
       "properties": {
         "@id": "way/307394550",
-        "building": "house",
+        "building": "house"
       },
       "geometry": {
         "type": "Polygon",

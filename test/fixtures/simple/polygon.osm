@@ -1,17 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version='0.6' upload='true' generator='JOSM'>
-  <bounds minlat='45.4691815' minlon='-75.4532266' maxlat='45.4697542' maxlon='-75.4524259' origin='CGImap 0.5.8 (17538 thorn-02.openstreetmap.org)' />
-  <node id='824501877' timestamp='2016-10-30T05:30:33Z' uid='2781619' user='DevonF' visible='true' version='3' changeset='43276929' lat='45.4693432' lon='-75.453082' />
-  <node id='824506861' timestamp='2016-10-30T05:30:33Z' uid='2781619' user='DevonF' visible='true' version='3' changeset='43276929' lat='45.4696855' lon='-75.4524915' />
-  <node id='824513820' timestamp='2016-10-30T05:30:33Z' uid='2781619' user='DevonF' visible='true' version='3' changeset='43276929' lat='45.4695182' lon='-75.4524084' />
-  <node id='824514352' timestamp='2016-10-30T05:30:33Z' uid='2781619' user='DevonF' visible='true' version='3' changeset='43276929' lat='45.4695132' lon='-75.4531771' />
-  <way id='68577221' timestamp='2016-10-30T05:30:35Z' uid='2781619' user='DevonF' visible='true' version='3' changeset='43276929'>
-    <nd ref='824501877' />
-    <nd ref='824513820' />
-    <nd ref='824506861' />
-    <nd ref='824514352' />
-    <nd ref='824501877' />
+  <node id='-135753' action='modify' visible='true' lat='42.1664090997' lon='-75.73664848328' />
+  <node id='-135754' action='modify' visible='true' lat='42.17404274612' lon='-75.67279045105' />
+  <node id='-135755' action='modify' visible='true' lat='42.1553688771' lon='-75.668726986' />
+  <node id='-135756' action='modify' visible='true' lat='42.14773297736' lon='-75.73258501823' />
+  <way id='-135757' action='modify' visible='true'>
+    <nd ref='-135753' />
+    <nd ref='-135754' />
+    <nd ref='-135755' />
+    <nd ref='-135756' />
+    <nd ref='-135753' />
     <tag k='building' v='yes' />
-    <tag k='source' v='CanVec 6.0 - NRCan' />
   </way>
 </osm>

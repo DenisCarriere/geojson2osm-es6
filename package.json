@@ -31,10 +31,13 @@
     "geojson"
   ],
   "dependencies": {
-    "xml-js": "^0.9.7",
-    "@types/xml-js": "^0.9.0",
+    "@turf/explode": "^3.6.1",
     "@types/geojson": "0.0.31",
-    "@types/node": "^6.0.48"
+    "@types/node": "^6.0.48",
+    "@types/turf": "^3.5.32",
+    "@types/xml-js": "^0.9.0",
+    "geojson-flatten": "^0.2.1",
+    "xml-js": "^0.9.7"
   },
   "ava": {
     "files": [

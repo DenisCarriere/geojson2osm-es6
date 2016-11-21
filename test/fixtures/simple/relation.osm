@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <node id='-135738' action='modify' visible='true' lat='42.1165132738' lon='-75.72737876892' />
+  <node id='-135739' action='modify' visible='true' lat='42.10861798601' lon='-75.64875785828' />
+  <node id='-135740' action='modify' visible='true' lat='42.14095695845' lon='-75.7163924408' />
+  <node id='-135741' action='modify' visible='true' lat='42.14299350641' lon='-75.67279045105' />
+  <node id='-135742' action='modify' visible='true' lat='42.06046092412' lon='-75.67347709656' />
+  <node id='-135743' action='modify' visible='true' lat='42.08721936012' lon='-75.72394554138' />
+  <node id='-135744' action='modify' visible='true' lat='42.07524316918' lon='-75.65047447205' />
+  <way id='-135745' action='modify' visible='true'>
+    <nd ref='-135742' />
+    <nd ref='-135744' />
+    <nd ref='-135739' />
+    <nd ref='-135741' />
+    <nd ref='-135740' />
+  </way>
+  <way id='-135746' action='modify' visible='true'>
+    <nd ref='-135740' />
+    <nd ref='-135738' />
+    <nd ref='-135743' />
+    <nd ref='-135742' />
+  </way>
+  <relation id='-135747' action='modify' visible='true'>
+    <member type='way' ref='-135745' role='outer' />
+    <member type='way' ref='-135746' role='outer' />
+    <tag k='admin_level' v='8' />
+    <tag k='boundary' v='administrative' />
+    <tag k='type' v='multipolygon' />
+  </relation>
+</osm>

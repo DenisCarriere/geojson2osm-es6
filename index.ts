@@ -1,58 +1,173 @@
 import * as convert from 'xml-js'
+import * as explode from '@turf/explode'
+const flatten = require('geojson-flatten')
 
-interface Obj {
-  nodes?: string
-  osm?: string
-  ways?: string
-  relations?: string
-}
+const assign = Object.assign
 
-export const declaration = {
+export const Declaration = {
   _declaration: {
     _attributes: {
-      encoding: 'utf-8',
       version: '1.0',
+      encoding: 'UTF-8',
     },
   },
 }
 
-export const generator = {
+export const Generator = {
   osm: {
     _attributes: {
-      generator: 'geojson2osm-es6',
       version: '0.6',
+      generator: 'geojson2osm-es6',
     },
   },
 }
 
-export function createHeader() {
-  return Object.assign(declaration, generator)
+export function createOSM(features?: any) {
+  const generator = Generator
+  if (features !== undefined) { generator.osm = assign(generator.osm, features) }
+  return Object.assign(Declaration, generator)
 }
 
 export function geojson2osm(geojson: GeoJSON.Feature<any> | GeoJSON.FeatureCollection<any>) {
-  const header = createHeader()
-  const xml = convert.js2xml(header, { spaces: 2 })
+  const osm = createOSM()
+  const xml = convert.js2xml(osm, { spaces: 2 })
   return xml
 }
+
+export function Tag(key: string | number, value: string | number) {
+  return {
+    _attributes: {
+      k: key,
+      v: value,
+    },
+  }
+}
+
+export function nodeRef(ref: number | string) {
+  return {
+    nd: {
+      _attributes: {
+        ref: String(ref),
+      },
+    },
+  }
+}
+
+/**
+ * Round multiple coordinates
+ *
+ * @param {Array<Array<number>>} coords Coordinates
+ * @returns {Array<Array<number>>} coords Rounded coordinates
+ */
+export function roundCoords(coords: Array<Array<number>>): Array<Array<number>> {
+  return coords.map(coord => {
+    return roundCoord(coord)
+  })
+}
+
+/**
+ * Round single coordinate
+ *
+ * @param {Array<number>} Coordinates
+ * @returns {Array<number>} Rounded coordinates
+ */
+export function roundCoord(coord: Array<number>): Array<number> {
+  return coord.map(i => Number(i.toFixed(6)))
+}
+
+/**
+ * Properties Edit
+ *
+ * @param {Object} properties
+ * @returns {Element} OSM XML string
+ */
+function propertiesToEdit(properties: any) {
+  const attributes: any = {}
+  Object.keys(properties).map(key => {
+    if (key.indexOf('@') !== -1) {
+      attributes[key.replace('@', '')] = properties[key]
+    }
+  })
+  if (attributes.timestamp !== undefined) { attributes.timestamp = new Date(properties[attributes.timestamp] * 1000).toISOString() }
+  if (attributes.id === undefined) { attributes.id = count }
+  if (attributes.changeset === undefined) { attributes.changeset = 'false' }
+  return attributes
+}
+
+/**
+ * Properties To Tags
+ *
+ * @param {Object} properties
+ * @returns {string} OSM XML string
+ */
+function propertiesToTags(properties: any): Array<any> {
+  const tags: Array<any> = []
+  Object.keys(properties).map(key => {
+    if (properties[key] !== undefined && key.indexOf('@') === -1) {
+      tags.push(Tag(key, properties[key]))
+    }
+  })
+  return tags
+}
+
+/**
+ * Convert GeoJSON.Point to OSM XML
+ *
+ * @param {Point}
+ * @param {Object} properties
+ * @returns {string} OSM XML String
+ */
+export function Point(coord: Array<number>, properties: any) {
+  const [lon, lat] = coord
+  const _attributes = assign({lat, lon}, propertiesToEdit(properties))
+  return {
+    node: assign({ _attributes }, {tag: propertiesToTags(properties)}),
+  }
+}
+
+const geojson: GeoJSON.FeatureCollection<any> = require('./test/fixtures/simple/polygon.json')
+
+let count = 0
+const hash: any = {}
+const nodes: Array<any> = []
+// const ways: Array<any> = []
+// const relations: Array<any> = []
+const flattened: GeoJSON.FeatureCollection<any> = flatten(geojson)
+
+flattened.features.map(feature => {
+  const properties = feature.properties
+  const type = feature.geometry.type
+  const nodeRefs: Array<any>  = []
+  console.log(propertiesToEdit(properties))
+  console.log(propertiesToTags(properties))
+  console.log(type)
+  console.log(properties)
+  explode(feature).features.map(point => {
+    const coord = point.geometry.coordinates
+    let id: number
+    if (hash[coord.join(',')] !== undefined) {
+      id = hash[coord.join(',')]
+    } else {
+      count --
+      id = count
+      hash[coord.join(',')] = id
+    }
+    nodeRefs.push(nodeRef(id))
+    nodes.push(Point(coord, assign({ id })))
+  })
+  console.log(nodeRefs)
+})
+
+// const p = Point([-75, 45], {'@id': 100, place: 'city', state: 'ON'})
+// console.log(p)
+// const attr = { node: { _attributes: { lat: 45, lon: -75, id: 100, changeset: 'false' }, place: 'city' } }
+// //           { node: { _attributes: { lat: 45, lng: -75}, b: {} }}
+// const xml = convert.js2xml(p, { compact: true,  spaces: 2 })
+// console.log(xml)
 
 export default {
   geojson2osm,
 }
-
-// /**
-//  * Convert GeoJSON.Point to OSM XML
-//  *
-//  * @param {Point}
-//  * @param {Object} properties
-//  * @returns {string} OSM XML String
-//  */
-// function Point(geo: GeoJSON.GeometryObject, properties: Properties = {}) {
-//   const [lon, lat] = roundCoords([geo.coordinates])
-//   const _attributes = assign({lat, lon}, propertiesEdit(properties))
-//   return {
-//     node: assign({ _attributes }, propertiesToTags(properties)),
-//   }
-// }
 
 // /**
 //  * Converts GeoJSON.LineString to OSM XML
@@ -136,37 +251,6 @@ export default {
 // }
 
 // /**
-//  * Round coordinates
-//  *
-//  * @param {number[][]} coords Coordinates
-//  * @returns {number[][]} coords Rounded coordinates
-//  */
-// function roundCoords(coords: [number, number][]): [number, number][] {
-//   return coords.map(coord => {
-//     return coord.map(i => Number(i.toFixed(6)))
-//   })
-// }
-
-// /**
-//  * Properties Edit
-//  *
-//  * @param {Object} properties
-//  * @returns {Element} OSM XML string
-//  */
-// function propertiesEdit(properties: Properties) {
-//   const _attributes: any = {}
-//   Object.keys(properties).map(key => {
-//     if (key.indexOf('@') !== -1) {
-//       _attributes[key.replace('@', '')] = properties[key]
-//     }
-//   })
-//   if (_attributes.timestamp !== undefined) { _attributes.timestamp = new Date(properties[_attributes.timestamp] * 1000).toISOString() }
-//   if (_attributes.id === undefined) { _attributes.id = count }
-//   if (_attributes.changeset === undefined) { _attributes.changeset = 'false' }
-//   return _attributes
-// }
-
-// /**
 //  * Key XML element
 //  *
 //  * @param {string} key
@@ -184,20 +268,6 @@ export default {
 //       },
 //     },
 //   }
-// }
-
-// /**
-//  * Properties To Tags
-//  *
-//  * @param {Object} properties
-//  * @returns {string} OSM XML string
-//  */
-// function propertiesToTags(properties: Properties) {
-//   return Object.keys(properties).map(key => {
-//     if (properties[key] !== undefined && key.indexOf('@') === -1) {
-//       return Key(key, properties[key])
-//       }
-//     })
 // }
 
 // /**
