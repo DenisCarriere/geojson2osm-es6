@@ -158,10 +158,7 @@ flattened.features.map(feature => {
   console.log(nodeRefs)
 })
 
-// const p = Point([-75, 45], {'@id': 100, place: 'city', state: 'ON'})
-// console.log(p)
-// const attr = { node: { _attributes: { lat: 45, lon: -75, id: 100, changeset: 'false' }, place: 'city' } }
-// //           { node: { _attributes: { lat: 45, lng: -75}, b: {} }}
+// const p = Point([-75, 45], {'@id': 100, place: 'city', state: '<ON>'})
 // const xml = convert.js2xml(p, { compact: true,  spaces: 2 })
 // console.log(xml)
 
