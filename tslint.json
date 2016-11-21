@@ -10,7 +10,9 @@
     "max-line-length": [true, 150],
     "no-console": [false],
     "interface-name": [false],
-    "no-var-requires": false
+    "no-var-requires": false,
+    "no-reference": false,
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": [ ]
 }
